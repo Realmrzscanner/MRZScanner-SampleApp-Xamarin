@@ -1,0 +1,8 @@
+Instalation Guide/
+MRZScannerDroidBinding/
+MRZScannerIOSBinding/
+bin/
+obj/
+packages/
+
+.vs/

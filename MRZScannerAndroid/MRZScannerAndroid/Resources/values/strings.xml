@@ -1,0 +1,7 @@
+<resources>
+  <string name="app_name">MRZSampleApp</string>
+
+  <string name="title_activity_scanner">ScannerActivity</string>
+  <string name="start_mrz_scanner">Start MRZ Scanner</string>
+  <string name="passport_image_capture">Passport image capture</string>
+</resources>
