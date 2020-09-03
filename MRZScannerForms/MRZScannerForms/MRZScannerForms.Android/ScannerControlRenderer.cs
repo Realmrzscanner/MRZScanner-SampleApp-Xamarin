@@ -1,8 +1,7 @@
-﻿using System;
-
-using Android.Content;
+﻿using Android.Content;
 using Android.Support.V4.App;
 using Com.Scansolutions.Mrzscannerlib;
+using System;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
 
@@ -53,7 +52,7 @@ namespace MRZScannerForms.Droid
             // Set the max CPU threads that the scanner can use. Default: 2.
             MRZScanner.SetMaxThreads(((ScannerControl)Element).MaxThreads);
             // Set license key
-            MRZScanner.RegisterWithLicenseKey(Context, ((ScannerControl)Element).LicenseKey);
+            MRZScanner.RegisterWithLicenseKey(Context, ((ScannerControl)Element).LicenseKey, (IMRZLicenceResultListener)Context);
 
             if (Control == null)
                 SetNativeControl(_scannerLayout);
@@ -90,7 +89,7 @@ namespace MRZScannerForms.Droid
 
         private void ScannerControlRenderer_OnResumeScanning(object sender, EventArgs e)
         {
-            MRZScanner.ResumeScanning();
+            mrzScanner.ResumeScanning();
         }
     }
 }

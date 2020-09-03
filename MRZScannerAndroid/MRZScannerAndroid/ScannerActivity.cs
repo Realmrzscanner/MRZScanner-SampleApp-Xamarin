@@ -1,17 +1,16 @@
-﻿using System;
-
-using Android.App;
+﻿using Android.App;
 using Android.Content;
 using Android.Graphics;
 using Android.OS;
 using Android.Support.V7.App;
 using Android.Widget;
 using Com.Scansolutions.Mrzscannerlib;
+using System;
 
 namespace MRZScannerAndroid
 {
-    [Activity(Label = "@string/title_activity_scanner", Theme = "@style/FullscreenTheme", ConfigurationChanges = Android.Content.PM.ConfigChanges.Orientation | Android.Content.PM.ConfigChanges.ScreenSize | Android.Content.PM.ConfigChanges.KeyboardHidden)]
-    public class ScannerActivity : AppCompatActivity, IMRZScannerListener
+    [Activity(Label = "@string/title_activity_scanner", Theme = "@style/FullscreenTheme", ConfigurationChanges = Android.Content.PM.ConfigChanges.ScreenSize | Android.Content.PM.ConfigChanges.KeyboardHidden)]
+    public class ScannerActivity : AppCompatActivity, IMRZScannerListener, IMRZLicenceResultListener
     {
         MRZScanner mrzScanner;
         private static String TYPE_EXTRA = "TYPE_EXTRA";
@@ -37,18 +36,29 @@ namespace MRZScannerAndroid
             MRZScanner.SetPassportActive(true);   // Enable/disable the Passport document type. Default: true.
             MRZScanner.SetVisaActive(true);       // Enable/disable the Visa document type. Default: true.
             MRZScanner.SetMaxThreads(2);          // Set the max CPU threads that the scanner can use. Default: 2.
-            MRZScanner.RegisterWithLicenseKey(this, "licenseKey");
+            MRZScanner.RegisterWithLicenseKey(this, "licenseKey", this);
+        }
+
+        public void OnRegisterWithLicenceResult(int result, string errorMessage)
+        {
+            if (errorMessage != null)
+            {
+                Console.WriteLine("Result code: " + result + ". " + errorMessage);
+            }
+            else
+            {
+                Console.WriteLine("Result code: " + result + ". Registration successful.");
+            }
         }
 
         public void SuccessfulScanWithResult(MRZResultModel mrzResultModel)
         {
             new Android.Support.V7.App.AlertDialog.Builder(this)
-                    .SetTitle(mrzResultModel.FullName)
-                    .SetMessage(mrzResultModel.DocumentNumber)
+                    .SetMessage(mrzResultModel.ToReadableString())
                     .SetCancelable(false)
                     .SetPositiveButton("Resume", (dialogInterface, i) =>
                     {
-                        MRZScanner.ResumeScanning();
+                        mrzScanner.ResumeScanning();
                     })
                     .SetNegativeButton("Close", (dialogInterface, i) =>
                     {
@@ -66,7 +76,7 @@ namespace MRZScannerAndroid
                     .SetMessage("Captured image")
                     .SetPositiveButton("Scan again", (dialogInterface, i) =>
                     {
-                        MRZScanner.ResumeScanning();
+                        mrzScanner.ResumeScanning();
                     })
                     .SetNegativeButton("Close", (dialogInterface, i) =>
                     {

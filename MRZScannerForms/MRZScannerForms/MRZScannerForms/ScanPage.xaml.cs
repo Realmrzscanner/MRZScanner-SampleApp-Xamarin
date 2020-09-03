@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -51,6 +48,11 @@ namespace MRZScannerForms
 
                 await Navigation.PopAsync(true);
             }
+        }
+
+        private void scannerControl_LicenseResult(object sender, LicenseResultType result)
+        {
+            Debug.WriteLine("License result: " + result.ToString());
         }
 
         //Executed only on iOS platform when embedded close button is pressed

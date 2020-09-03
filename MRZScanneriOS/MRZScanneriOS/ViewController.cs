@@ -43,7 +43,17 @@ namespace MRZScanneriOS
             // Set the max CPU threads that the scanner can use. Default: 2.
             mrzScannerController.SetMaxCPUCores(2);
             // Set license key
-            MRZScannerController.RegisterLicenseWithKey("License_key");
+            MRZScannerController.RegisterLicenseWithKey("License_key", (result, error) =>
+            {
+                if (error != null)
+                {
+                    Console.WriteLine("Result code: " + result + ". " + error);
+                }
+                else
+                {
+                    Console.WriteLine("Result code: " + result + ". Registration successful.");
+                }
+            });
 
             mrzScannerController.WeakDelegate = this;
 
@@ -72,7 +82,17 @@ namespace MRZScanneriOS
             // Set the max CPU threads that the scanner can use. Default: 2.
             mrzScannerController.SetMaxCPUCores(2);
             // Set license key
-            MRZScannerController.RegisterLicenseWithKey("License_key");
+            MRZScannerController.RegisterLicenseWithKey("License_key", (result, error) =>
+            {
+                if (error != null)
+                {
+                    Console.WriteLine("Result code: " + result + ". " + error);
+                }
+                else
+                {
+                    Console.WriteLine("Result code: " + result + ". Registration successful.");
+                }
+            });
 
             mrzScannerController.WeakDelegate = this;
 

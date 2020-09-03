@@ -7,6 +7,7 @@
     <ContentPage.Content>
         <local:ScannerControl x:Name="scannerControl" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" 
                               ScannerType="Mrz" IDActive="True" PassportActive="True" VisaActive="True" MaxThreads="2"
-                              ScanningFinished="scannerControl_ScanningFinished" ScannerDismissed="scannerControl_ScannerDismissed" />
+                              ScanningFinished="scannerControl_ScanningFinished" ScannerDismissed="scannerControl_ScannerDismissed"
+                              LicenseResult="scannerControl_LicenseResult" />
     </ContentPage.Content>
 </ContentPage>

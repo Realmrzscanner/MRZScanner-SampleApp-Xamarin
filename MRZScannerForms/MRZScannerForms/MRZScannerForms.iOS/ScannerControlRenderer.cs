@@ -48,7 +48,37 @@ namespace MRZScannerForms.iOS
             // Set the max CPU threads that the scanner can use. Default: 2.
             mrzSannerController.SetMaxCPUCores(((ScannerControl)Element).MaxThreads);
             // Set license key
-            MRZScannerController.RegisterLicenseWithKey(((ScannerControl)Element).LicenseKey);
+            MRZScannerController.RegisterLicenseWithKey(((ScannerControl)Element).LicenseKey, (result, error) =>
+            {
+                LicenseResultType licenseResult = LicenseResultType.Unknown;
+
+                switch (result)
+                {
+                    case 0:
+                        licenseResult = LicenseResultType.Successful;
+                        break;
+                    case -1:
+                        licenseResult = LicenseResultType.Error_While_Parsing;
+                        break;
+                    case -2:
+                        licenseResult = LicenseResultType.Invalid_Licence;
+                        break;
+                    case -3:
+                        licenseResult = LicenseResultType.Invalid_Bundle_ID;
+                        break;
+                    case -4:
+                        licenseResult = LicenseResultType.Invalid_Device_Model;
+                        break;
+                    case -5:
+                        licenseResult = LicenseResultType.Licence_Expired;
+                        break;
+                    case -6:
+                        licenseResult = LicenseResultType.Invalid_Platform;
+                        break;
+                }
+
+                ((ScannerControl)Element).OnLicenseResult(licenseResult);
+            });
 
             mrzSannerController.WeakDelegate = this;
 
@@ -73,10 +103,11 @@ namespace MRZScannerForms.iOS
         {
             if (Element != null)
             {
-                ResultModel _resultReceived = new ResultModel(mrzResultDataModel.Document_type_raw, mrzResultDataModel.Issuing_country, mrzResultDataModel.Surnames,
-                mrzResultDataModel.Given_names, mrzResultDataModel.Document_number, mrzResultDataModel.Nationality, mrzResultDataModel.Dob_raw, mrzResultDataModel.Sex,
-                mrzResultDataModel.Expiration_date_raw, mrzResultDataModel.Expiration_date_raw, mrzResultDataModel.Optionals, mrzResultDataModel.DateScanned,
-                mrzResultDataModel.Expiration_date_readable, mrzResultDataModel.Expiration_date_readable, mrzResultDataModel.Document_type_readable, mrzResultDataModel.Dob_readable, mrzResultDataModel.FullName, mrzResultDataModel.Raw_result);
+                ResultModel _resultReceived = new ResultModel(mrzResultDataModel.Document_type_raw, mrzResultDataModel.Issuing_country, mrzResultDataModel.Master_check_digit, mrzResultDataModel.Surnames,
+                mrzResultDataModel.Given_names, mrzResultDataModel.Document_number, mrzResultDataModel.Document_number_with_check_digit, mrzResultDataModel.Nationality, mrzResultDataModel.Dob_raw, mrzResultDataModel.Sex,
+                mrzResultDataModel.Est_issuing_date_raw, mrzResultDataModel.Expiration_date_raw, mrzResultDataModel.Optionals, mrzResultDataModel.DateScanned, mrzResultDataModel.IsExpired,
+                mrzResultDataModel.Est_issuing_date_readable, mrzResultDataModel.Expiration_date_readable, mrzResultDataModel.Expiration_date_with_check_digit, mrzResultDataModel.Document_type_readable,
+                mrzResultDataModel.Dob_readable, mrzResultDataModel.Dob_with_check_digit, mrzResultDataModel.FullName, mrzResultDataModel.Raw_result);
 
                 if (mrzResultDataModel.Portrait != null)
                 {

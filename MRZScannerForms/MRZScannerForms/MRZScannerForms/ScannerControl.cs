@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using Xamarin.Forms;
 
 namespace MRZScannerForms
@@ -116,6 +115,12 @@ namespace MRZScannerForms
         {
             ScannerDismissed?.Invoke(this, null);
         }
+
+        public event EventHandler<LicenseResultType> LicenseResult;
+        public void OnLicenseResult(LicenseResultType result)
+        {
+            LicenseResult?.Invoke(this, result);
+        }
     }
 
     public class ResultModel
@@ -123,8 +128,10 @@ namespace MRZScannerForms
         private string estIssuingDateReadable = "";
         private string expirationDateRaw = "";
         private string expirationDateReadable = "";
+        private string expirationDateWithCheckDigit = "";
         private IList<string> givenNames;
         private string issuingCountry = "";
+        private string masterCheckDigit = "";
         private string nationality = "";
         private IList<string> optionals;
         private string sex = "";
@@ -133,27 +140,33 @@ namespace MRZScannerForms
         private string documentTypeReadable = "";
         private string documentTypeRaw = "";
         private string documentNumber = "";
+        private string documentNumberWithCheckDigit = "";
         private string dobReadable = "";
+        private string dobWithCheckDigit = "";
         private string dobRaw = "";
         private long dateScanned;
+        private bool isExpired;
         private string fullName = "";
         private string error = null;
         private string rawResult = null;
         byte[] resultImage = null;
         byte[] portrait = null;
         byte[] signature = null;
+        byte[] fullImage = null;
 
         public ResultModel() { }
 
-        public ResultModel(string _documentTypeRaw, string _issuingCountry, IList<string> _surnames, IList<string> _givenNames, string _documentNumber,
-            string _nationality, string _dobRaw, string _sex, string _estIssuingDateRaw, string _expirationDateRaw, IList<string> _optionals, long _dateScanned,
-            string _estIssuingDateReadable, string _expirationDateReadable, string _documentTypeReadable, string _dobReadable, string _fullName, string _rawResult)
+        public ResultModel(string _documentTypeRaw, string _issuingCountry, string _masterCheckDigit, IList<string> _surnames, IList<string> _givenNames, string _documentNumber, string _documentNumberWithCheckDigit,
+            string _nationality, string _dobRaw, string _sex, string _estIssuingDateRaw, string _expirationDateRaw, IList<string> _optionals, long _dateScanned, bool _isExpired,
+            string _estIssuingDateReadable, string _expirationDateReadable, string _expirationDateWithCheckDigit, string _documentTypeReadable, string _dobReadable, string _dobWithCheckDigit, string _fullName, string _rawResult)
         {
             this.documentTypeRaw = _documentTypeRaw;
             this.issuingCountry = _issuingCountry;
+            this.masterCheckDigit = _masterCheckDigit;
             this.surnames = _surnames;
             this.givenNames = _givenNames;
             this.documentNumber = _documentNumber;
+            this.documentNumberWithCheckDigit = _documentNumberWithCheckDigit;
             this.nationality = _nationality;
             this.dobRaw = _dobRaw;
             this.sex = _sex;
@@ -161,11 +174,14 @@ namespace MRZScannerForms
             this.expirationDateRaw = _expirationDateRaw;
             this.optionals = _optionals;
             this.dateScanned = _dateScanned;
+            this.isExpired = _isExpired;
 
             this.estIssuingDateReadable = _estIssuingDateReadable;
             this.expirationDateReadable = _expirationDateReadable;
+            this.expirationDateWithCheckDigit = _expirationDateWithCheckDigit;
             this.documentTypeReadable = _documentTypeReadable;
             this.dobReadable = _dobReadable;
+            this.dobWithCheckDigit = _dobWithCheckDigit;
             this.fullName = _fullName;
             this.rawResult = _rawResult;
         }
@@ -187,6 +203,12 @@ namespace MRZScannerForms
             set { issuingCountry = value; }
         }
 
+        public string MasterCheckDigit
+        {
+            get { return masterCheckDigit; }
+            set { masterCheckDigit = value; }
+        }
+
         public IList<string> Surnames
         {
             get { return surnames; }
@@ -203,6 +225,12 @@ namespace MRZScannerForms
         {
             get { return documentNumber; }
             set { documentNumber = value; }
+        }
+
+        public string DocumentNumberWithCheckDigit
+        {
+            get { return documentNumberWithCheckDigit; }
+            set { documentNumberWithCheckDigit = value; }
         }
 
         public string Nationality
@@ -247,6 +275,12 @@ namespace MRZScannerForms
             set { dateScanned = value; }
         }
 
+        public bool IsExpired
+        {
+            get { return isExpired; }
+            set { isExpired = value; }
+        }
+
 
         public string EstIssuingDateReadable
         {
@@ -260,6 +294,12 @@ namespace MRZScannerForms
             set { expirationDateReadable = value; }
         }
 
+        public string ExpirationDateWithCheckDigit
+        {
+            get { return expirationDateWithCheckDigit; }
+            set { expirationDateWithCheckDigit = value; }
+        }
+
         public string DocumentTypeReadable
         {
             get { return documentTypeReadable; }
@@ -270,6 +310,12 @@ namespace MRZScannerForms
         {
             get { return dobReadable; }
             set { dobReadable = value; }
+        }
+
+        public string DobWithCheckDigit
+        {
+            get { return dobWithCheckDigit; }
+            set { dobWithCheckDigit = value; }
         }
 
         public string FullName
@@ -302,6 +348,12 @@ namespace MRZScannerForms
             set { signature = value; }
         }
 
+        public byte[] FullImage
+        {
+            get { return fullImage; }
+            set { fullImage = value; }
+        }
+
         public byte[] ResultImage
         {
             get { return resultImage; }
@@ -314,5 +366,17 @@ namespace MRZScannerForms
         Mrz,
         DocImageId,
         DocImagePassport
+    }
+
+    public enum LicenseResultType
+    {
+        Successful,
+        Error_While_Parsing,
+        Invalid_Licence,
+        Invalid_Bundle_ID,
+        Invalid_Device_Model,
+        Licence_Expired,
+        Invalid_Platform,
+        Unknown
     }
 }
