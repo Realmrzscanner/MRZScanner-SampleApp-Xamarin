@@ -92,6 +92,24 @@ namespace MRZScannerForms.Droid
                     }
                 }
 
+                if (mrzResultModel.IdFront != null)
+                {
+                    using (MemoryStream stream = new MemoryStream())
+                    {
+                        mrzResultModel.IdFront.Compress(Bitmap.CompressFormat.Png, 0, stream);
+                        _resultReceived.IdFront = stream.ToArray();
+                    }
+                }
+
+                if (mrzResultModel.IdBack != null)
+                {
+                    using (MemoryStream stream = new MemoryStream())
+                    {
+                        mrzResultModel.IdBack.Compress(Bitmap.CompressFormat.Png, 0, stream);
+                        _resultReceived.IdBack = stream.ToArray();
+                    }
+                }
+
                 elementScanner.OnScanningFinished(_resultReceived);
             }
         }
@@ -123,6 +141,34 @@ namespace MRZScannerForms.Droid
         {
             if (elementScanner != null)
                 elementScanner.OnScanningFinished(new ResultModel("Permissions were denied"));
+        }
+
+        public void SuccessfulIdFrontImageScan(Bitmap fullImage, Bitmap portrait)
+        {
+            if (elementScanner != null)
+            {
+                ResultModel resultWithImage = new ResultModel();
+
+                if (fullImage != null)
+                {
+                    using (MemoryStream stream = new MemoryStream())
+                    {
+                        fullImage.Compress(Bitmap.CompressFormat.Png, 0, stream);
+                        resultWithImage.IdFront = stream.ToArray();
+                    }
+                }
+
+                if (portrait != null)
+                {
+                    using (MemoryStream stream = new MemoryStream())
+                    {
+                        portrait.Compress(Bitmap.CompressFormat.Png, 0, stream);
+                        resultWithImage.Portrait = stream.ToArray();
+                    }
+                }
+
+                elementScanner.OnScanningFinished(resultWithImage);
+            }
         }
     }
 }

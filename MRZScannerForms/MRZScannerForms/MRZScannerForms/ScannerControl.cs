@@ -83,6 +83,62 @@ namespace MRZScannerForms
             }
         }
 
+        public static readonly BindableProperty ExtractFullPassportImageEnabledProperty = BindableProperty.Create("ExtractFullPassportImageEnabled", typeof(bool), typeof(ScannerControl), true);
+
+        public bool ExtractFullPassportImageEnabled
+        {
+            get
+            {
+                return (bool)GetValue(ExtractFullPassportImageEnabledProperty);
+            }
+            set
+            {
+                SetValue(ExtractFullPassportImageEnabledProperty, value);
+            }
+        }
+
+        public static readonly BindableProperty ExtractIdBackImageEnabledProperty = BindableProperty.Create("ExtractIdBackImageEnabled", typeof(bool), typeof(ScannerControl), true);
+
+        public bool ExtractIdBackImageEnabled
+        {
+            get
+            {
+                return (bool)GetValue(ExtractIdBackImageEnabledProperty);
+            }
+            set
+            {
+                SetValue(ExtractIdBackImageEnabledProperty, value);
+            }
+        }
+
+        public static readonly BindableProperty ExtractPortraitEnabledProperty = BindableProperty.Create("ExtractPortraitEnabled", typeof(bool), typeof(ScannerControl), true);
+
+        public bool ExtractPortraitEnabled
+        {
+            get
+            {
+                return (bool)GetValue(ExtractPortraitEnabledProperty);
+            }
+            set
+            {
+                SetValue(ExtractPortraitEnabledProperty, value);
+            }
+        }
+
+        public static readonly BindableProperty ExtractSignatureEnabledProperty = BindableProperty.Create("ExtractSignatureEnabled", typeof(bool), typeof(ScannerControl), true);
+
+        public bool ExtractSignatureEnabled
+        {
+            get
+            {
+                return (bool)GetValue(ExtractSignatureEnabledProperty);
+            }
+            set
+            {
+                SetValue(ExtractSignatureEnabledProperty, value);
+            }
+        }
+
         public static readonly BindableProperty LicenseKeyProperty = BindableProperty.Create("LicenseKey", typeof(string), typeof(ScannerControl), "licenseKey");
 
         public string LicenseKey
@@ -153,6 +209,8 @@ namespace MRZScannerForms
         byte[] portrait = null;
         byte[] signature = null;
         byte[] fullImage = null;
+        byte[] idFront = null;
+        byte[] idBack = null;
 
         public ResultModel() { }
 
@@ -359,13 +417,27 @@ namespace MRZScannerForms
             get { return resultImage; }
             set { resultImage = value; }
         }
+
+        public byte[] IdFront
+        {
+            get { return idFront; }
+            set { idFront = value; }
+        }
+
+        public byte[] IdBack
+        {
+            get { return idBack; }
+            set { idBack = value; }
+        }
     }
 
     public enum ScanType
     {
         Mrz,
         DocImageId,
-        DocImagePassport
+        DocImagePassport,
+        DocImageIdFront,
+        IdSession
     }
 
     public enum LicenseResultType

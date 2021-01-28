@@ -47,6 +47,10 @@ namespace MRZScannerForms.iOS
             MRZScannerController.SetVisaActive(((ScannerControl)Element).VisaActive);
             // Set the max CPU threads that the scanner can use. Default: 2.
             mrzSannerController.SetMaxCPUCores(((ScannerControl)Element).MaxThreads);
+            MRZScannerController.SetExtractFullPassportImageEnabled(((ScannerControl)Element).ExtractFullPassportImageEnabled);
+            MRZScannerController.SetExtractIdBackEnabled(((ScannerControl)Element).ExtractIdBackImageEnabled);
+            MRZScannerController.SetExtractPortraitEnabled(((ScannerControl)Element).ExtractPortraitEnabled);
+            MRZScannerController.SetExtractSignatureEnabled(((ScannerControl)Element).ExtractSignatureEnabled);
             // Set license key
             MRZScannerController.RegisterLicenseWithKey(((ScannerControl)Element).LicenseKey, (result, error) =>
             {
@@ -115,7 +119,7 @@ namespace MRZScannerForms.iOS
                     {
                         Byte[] myByteArray = new Byte[imageData.Length];
                         System.Runtime.InteropServices.Marshal.Copy(imageData.Bytes, myByteArray, 0, Convert.ToInt32(imageData.Length));
-                        _resultReceived.ResultImage = myByteArray;
+                        _resultReceived.Portrait = myByteArray;
                     }
                 }
 
@@ -125,13 +129,44 @@ namespace MRZScannerForms.iOS
                     {
                         Byte[] myByteArray = new Byte[imageData.Length];
                         System.Runtime.InteropServices.Marshal.Copy(imageData.Bytes, myByteArray, 0, Convert.ToInt32(imageData.Length));
-                        _resultReceived.ResultImage = myByteArray;
+                        _resultReceived.Signature = myByteArray;
+                    }
+                }
+
+                if (mrzResultDataModel.FullImage != null)
+                {
+                    using (NSData imageData = mrzResultDataModel.FullImage.AsPNG())
+                    {
+                        Byte[] myByteArray = new Byte[imageData.Length];
+                        System.Runtime.InteropServices.Marshal.Copy(imageData.Bytes, myByteArray, 0, Convert.ToInt32(imageData.Length));
+                        _resultReceived.FullImage = myByteArray;
+                    }
+                }
+
+                if (mrzResultDataModel.IdFront != null)
+                {
+                    using (NSData imageData = mrzResultDataModel.IdFront.AsPNG())
+                    {
+                        Byte[] myByteArray = new Byte[imageData.Length];
+                        System.Runtime.InteropServices.Marshal.Copy(imageData.Bytes, myByteArray, 0, Convert.ToInt32(imageData.Length));
+                        _resultReceived.IdFront = myByteArray;
+                    }
+                }
+
+                if (mrzResultDataModel.IdBack != null)
+                {
+                    using (NSData imageData = mrzResultDataModel.IdBack.AsPNG())
+                    {
+                        Byte[] myByteArray = new Byte[imageData.Length];
+                        System.Runtime.InteropServices.Marshal.Copy(imageData.Bytes, myByteArray, 0, Convert.ToInt32(imageData.Length));
+                        _resultReceived.IdBack = myByteArray;
                     }
                 }
 
                 ((ScannerControl)Element).OnScanningFinished(_resultReceived);
             }
         }
+
         [Export("successfulDocumentScanWithImageResult:")]
         public void SuccessfulDocumentScanWithImageResult(UIImage resultImage)
         {
@@ -146,6 +181,37 @@ namespace MRZScannerForms.iOS
                         Byte[] myByteArray = new Byte[imageData.Length];
                         System.Runtime.InteropServices.Marshal.Copy(imageData.Bytes, myByteArray, 0, Convert.ToInt32(imageData.Length));
                         resultWithImage.ResultImage = myByteArray;
+                    }
+                }
+
+                ((ScannerControl)Element).OnScanningFinished(resultWithImage);
+            }
+        }
+
+        [Export("successfulIdFrontScanWithFullImage:portrait:")]
+        public void SuccessfulIdFrontScanWithFullImage(UIImage fullImage, UIImage portrait)
+        {
+            if (Element != null)
+            {
+                ResultModel resultWithImage = new ResultModel();
+
+                if (fullImage != null)
+                {
+                    using (NSData imageData = fullImage.AsPNG())
+                    {
+                        Byte[] myByteArray = new Byte[imageData.Length];
+                        System.Runtime.InteropServices.Marshal.Copy(imageData.Bytes, myByteArray, 0, Convert.ToInt32(imageData.Length));
+                        resultWithImage.IdFront = myByteArray;
+                    }
+                }
+
+                if (portrait != null)
+                {
+                    using (NSData imageData = portrait.AsPNG())
+                    {
+                        Byte[] myByteArray = new Byte[imageData.Length];
+                        System.Runtime.InteropServices.Marshal.Copy(imageData.Bytes, myByteArray, 0, Convert.ToInt32(imageData.Length));
+                        resultWithImage.Portrait = myByteArray;
                     }
                 }
 

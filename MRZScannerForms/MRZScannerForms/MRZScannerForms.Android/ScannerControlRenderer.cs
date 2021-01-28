@@ -39,6 +39,12 @@ namespace MRZScannerForms.Droid
                 case ScanType.DocImagePassport:
                     mrzScanner.SetScannerType(ScannerType.ScannerTypeDocImagePassport);
                     break;
+                case ScanType.DocImageIdFront:
+                    mrzScanner.SetScannerType(ScannerType.ScannerTypeDocImageIdFront);
+                    break;
+                case ScanType.IdSession:
+                    mrzScanner.SetScannerType(ScannerType.ScannerTypeIdSession);
+                    break;
                 default:
                     mrzScanner.SetScannerType(ScannerType.ScannerTypeMrz);
                     break;
@@ -51,6 +57,11 @@ namespace MRZScannerForms.Droid
             MRZScanner.SetVisaActive(((ScannerControl)Element).VisaActive);
             // Set the max CPU threads that the scanner can use. Default: 2.
             MRZScanner.SetMaxThreads(((ScannerControl)Element).MaxThreads);
+            MRZScanner.SetExtractFullPassportImageEnabled(((ScannerControl)Element).ExtractFullPassportImageEnabled);
+            MRZScanner.SetExtractIdBackImageEnabled(((ScannerControl)Element).ExtractIdBackImageEnabled);
+            MRZScanner.SetExtractPortraitEnabled(((ScannerControl)Element).ExtractPortraitEnabled);
+            MRZScanner.SetExtractSignatureEnabled(((ScannerControl)Element).ExtractSignatureEnabled);
+
             // Set license key
             MRZScanner.RegisterWithLicenseKey(Context, ((ScannerControl)Element).LicenseKey, (IMRZLicenceResultListener)Context);
 

@@ -94,5 +94,10 @@ namespace MRZScannerAndroid
         public void PermissionsWereDenied()
         {
         }
+
+        public void SuccessfulIdFrontImageScan(Bitmap fullImage, Bitmap portrait)
+        {
+
+        }
     }
 }

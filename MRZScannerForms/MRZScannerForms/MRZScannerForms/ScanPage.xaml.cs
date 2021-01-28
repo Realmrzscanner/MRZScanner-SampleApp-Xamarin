@@ -34,7 +34,12 @@ namespace MRZScannerForms
                     if (await DisplayAlert(resultModel.FullName, resultModel.DocumentNumber, "Resume", "Close"))
                         scannerControl.ResumeScanning();
                     else
+                    {
+                        if (resultModel.IdBack != null)
+                            ((MainPage)mainPage).imgResult.Source = ImageSource.FromStream(() => new MemoryStream(resultModel.IdBack));
+
                         await Navigation.PopAsync(true);
+                    }
                 }
                 else
                 {
